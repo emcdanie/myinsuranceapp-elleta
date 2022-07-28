@@ -1,0 +1,17 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: myinsuranceappdeployment
+  labels:
+    app: myinsuranceappelleta
+spec:
+  selector:
+    app: myinsuranceappelleta
+  type: LoadBalancer # for expose as loadbalancer
+  # type: NodePort # for expose as nodeport
+  ports:
+  - port: 5000
+    targetPort: http
+    # nodePort: 30163 #30000-32767 # uncomment if NodePort used
+    protocol: TCP
+    name: http-svc
