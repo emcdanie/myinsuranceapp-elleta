@@ -31,6 +31,7 @@ pipeline {
             steps {
                 echo 'creating image...'
                 /*sh 'docker build -t elletamc/myinsuranceappelleta:v8 -f Dockerfile .'*/
+                sh 'docker build -t hackathonimages.azurecr.io/myinsuranceappelleta:v8 -f Dockerfile .'
             }
         } 
         stage('Publish image') {
@@ -44,7 +45,7 @@ pipeline {
         }
         stage('Apply Kubernetes ') {
             steps {
-                withKubeConfig([credentialsId: 'k8-credentials' contexts:'minikube']) {
+                withKubeConfig([credentialsId: 'k8-credentials' contextName:'minikube']) {
                     sh 'kubectl apply -f kubernetes/1_insurance_app_test_deployment.yaml'
                     sh 'kubectl apply -f kubernetes/2_insurance_app_service.yaml'  
                     sh 'kubectl port-forward service/myinsapp 5000:5000 &'
