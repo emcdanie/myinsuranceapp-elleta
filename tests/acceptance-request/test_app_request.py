@@ -1,10 +1,10 @@
-# import unittest
-# import requests 
+import unittest
+import requests 
 
-# class TestApp(unittest.TestCase):
-#     token=''
+class TestApp(unittest.TestCase):
+    token=''
 
-#     base_url='http://localhost:5000/api/v1'
+    base_url='http://localhost:5000/api/v1'
 
 #     def test_1_getToken(self):
 #         url=f"{self.base_url}/token"
