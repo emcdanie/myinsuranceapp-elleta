@@ -44,10 +44,11 @@ pipeline {
         }
         stage('Apply Kubernetes ') {
             steps {
-                withKubeConfig([credentialsId: 'k8-credentials']) {
+                echo 'kube'
+                withKubeConfig([credentialsId: 'k8-credentials', contextName:'minikube']) {
                     sh 'kubectl apply -f kubernetes/1_insurance_app_test_deployment.yaml'
                     sh 'kubectl apply -f kubernetes/2_insurance_app_service.yaml'  
-                    sh 'kubectl port-forward service/myinsapp 5000:5000 &'
+                    sh 'kubectl port-forward service/myinsuranceappelleta:v8 5000:5000 &'
                 }
             }
         }
@@ -70,6 +71,8 @@ pipeline {
         }
         cleanup{
             echo 'post do this when cleanup...'
+            sh 'pkill -f "port-forward"'
+            deleteDir()
         }
     }
 }
