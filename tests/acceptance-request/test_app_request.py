@@ -34,3 +34,4 @@ class TestApp(unittest.TestCase):
         data= response.json 
         print(f"get_user_products: {data}")
         self.assertTrue(response.status_code > 400)
+        
