@@ -30,26 +30,24 @@ pipeline {
         stage('Create image') {
             steps {
                 echo 'creating image...'
-                /*sh 'docker build -t elletamc/myinsuranceappelleta:v8 -f Dockerfile .'*/
-                    sh 'docker build -t hackathonimages.azurecr.io/myinsuranceappelleta:v8 -f Dockerfile .'   
+                sh 'docker build -t elletamc/myinsuranceappelleta:v8 -f Dockerfile .'
             }
         } 
         stage('Publish image') {
             steps {
-                echo 'pushing image...'
-                withDockerRegistry([ credentialsId: "docker-hub-credentials", url: "hackathonimages.azurecr.io" ]) {
-                    /*sh 'docker push elletamc/myinsuranceappelleta:v8'*/
-                    sh 'docker push hackathonimages.azurecr.io/myinsuranceappelleta:v8'
+                echo 'pushing image..'
+                withDockerRegistry([ credentialsId: "docker-hub-credentials", url: "" ]) {
+                    sh 'docker push elletamc/myinsuranceappelleta:v8'
                 }
+               
             }
-
+        }
         stage('Apply Kubernetes ') {
             steps {
-                echo 'kube'
-                withKubeConfig([credentialsId: 'k8-credentials', contextName:'minikube']) {
+                withKubeConfig([credentialsId: 'k8-credentials']) {
                     sh 'kubectl apply -f kubernetes/1_insurance_app_test_deployment.yaml'
                     sh 'kubectl apply -f kubernetes/2_insurance_app_service.yaml'  
-                    sh 'kubectl port-forward service/myinsuranceappelleta:v8 5000:5000 &'
+                    sh 'kubectl port-forward service/myinsapp 5000:5000 &'
                 }
             }
         }
@@ -72,8 +70,6 @@ pipeline {
         }
         cleanup{
             echo 'post do this when cleanup...'
-           /* sh 'pkill -f "port-forward"'
-            deleteDir()*/
         }
     }
 }
