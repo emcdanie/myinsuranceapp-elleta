@@ -15,7 +15,7 @@ spec:
         app: myinsuranceappelleta
     spec:
       imagePullSecrets:
-      - name: acr-secret 
+      - name: acr-secret-elleta 
       containers:
       - name: myinsuranceappelleta-deployment-az
         image: myinsuranceapp/elletamc/myinsuranceappelleta:v8
