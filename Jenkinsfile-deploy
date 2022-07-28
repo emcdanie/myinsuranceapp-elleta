@@ -1,0 +1,75 @@
+pipeline {
+    agent any
+    
+    
+    stages {
+        stage('Checkout') {
+            steps {
+                git branch: 'deploy',url: 'https://github.com/emcdanie/myinsuranceapp-elleta.git'
+            }
+        }        
+        stage('Requirements') {
+            steps {
+                echo 'Installing dependencies...'
+                sh 'pip3 install -r requirements.txt'
+                sh 'python3 project/init/init_db.py'
+            }
+        }
+        stage('Unit/Integration tests') {
+            steps {
+                echo 'Unit/Integration...'
+                sh 'python3 -m unittest discover -s tests/unit -v'
+            }
+        }        
+        stage('Acceptance tests') {
+            steps {
+                echo 'Acceptance...'
+                sh 'python3 -m unittest discover -s tests/acceptance-flask -v'
+            }
+        }     
+        stage('Create image') {
+            steps {
+                echo 'creating image...'
+                sh 'docker build -t elletamc/myinsuranceappelleta:v8 -f Dockerfile .'
+            }
+        } 
+        stage('Publish image') {
+            steps {
+                echo 'pushing image..'
+                withDockerRegistry([ credentialsId: "docker-hub-credentials", url: "" ]) {
+                    sh 'docker push elletamc/myinsuranceappelleta:v8'
+                }
+               
+            }
+        }
+        stage('Apply Kubernetes ') {
+            steps {
+                withKubeConfig([credentialsId: 'k8-credentials']) {
+                    sh 'kubectl apply -f kubernetes/1_insurance_app_test_deployment.yaml'
+                    sh 'kubectl apply -f kubernetes/2_insurance_app_service.yaml'  
+                    sh 'kubectl port-forward service/myinsapp 5000:5000 &'
+                }
+            }
+        }
+        stage('External acceptance tests') {
+            steps{
+                echo 'External acceptance tests...'
+                sh 'python3 -m unittest discover -s tests/acceptance-request -v'
+            }
+        }
+    }
+    post {
+        always {
+            echo 'post do this always...'
+        }
+        success{
+            echo 'post do this when success...'
+        }
+        failure {
+            echo 'post do this when failure...'
+        }
+        cleanup{
+            echo 'post do this when cleanup...'
+        }
+    }
+}
