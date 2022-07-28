@@ -46,8 +46,10 @@ pipeline {
         stage('Apply Kubernetes ') {
             steps {
                 withKubeConfig([credentialsId: 'k8-credentials', contextName:'minikube']) {
-                    sh 'kubectl apply -f kubernetes/1_insurance_app_test_deployment.yaml'
-                    sh 'kubectl apply -f kubernetes/2_insurance_app_service.yaml'  
+                    /*sh 'kubectl apply -f kubernetes/1_insurance_app_test_deployment.yaml'
+                    sh 'kubectl apply -f kubernetes/2_insurance_app_service.yaml'*/
+                    sh 'kubectl apply -f kubernetes/3_insurance_app_test_deployment_az.yaml'
+                    sh 'kubectl apply -f kubernetes/4_insurance_app_service_az.yaml' 
                     sh 'kubectl port-forward service/myinsapp 5000:5000 &'
                 }
             }
