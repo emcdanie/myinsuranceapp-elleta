@@ -1,0 +1,22 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: myinsuranceappdeployment
+  labels:
+    app: myinsuranceappelleta
+spec:
+  replicas: 5
+  selector:
+    matchLabels:
+      app: myinsuranceappelleta
+  template:
+    metadata:
+      labels:
+        app: myinsuranceappelleta
+    spec:
+      containers:
+      - name: app
+        image: elletamc/myinsuranceappelleta:v8
+        ports:
+        - name: http
+          containerPort: 5000
