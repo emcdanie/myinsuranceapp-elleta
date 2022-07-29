@@ -12,7 +12,7 @@ class TestApp(unittest.TestCase):
         data= response.json 
         
         print(f"post token: {data}")
-        self.assertEqual(response.status_code, 500)
+        self.assertEqual(response.status_code, 200)
 
         if response.status_code==200:
             TestApp.token=data['token']
@@ -25,7 +25,7 @@ class TestApp(unittest.TestCase):
 
         data= response.json        
         print(f"get_user_products: {data}")
-        self.assertEqual(response.status_code, 422)
+        self.assertEqual(response.status_code, 200)
 
         self.assertTrue(len(data)>0)
     
