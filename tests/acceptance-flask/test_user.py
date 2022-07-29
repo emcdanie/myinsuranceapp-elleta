@@ -37,8 +37,4 @@ class TestApp(unittest.TestCase):
         self.assertEqual(response.status_code, 200)
         self.assertTrue(data["ok"])
 
-    def test_3_get_none(self):
-        response =self.client.post('/api/v1/token', content_type='application/json')
-        data=response.json
-        print(f"get post 2: {data}")
-        self.assertEqual(response.status_code, 400)
+  
