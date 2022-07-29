@@ -32,7 +32,7 @@ class TestApp(unittest.TestCase):
         print(f"get_user_products: {data}")
 
        
-        self.assertTrue(response.status_code > 400)
+        self.assertEqual(response.status_code, 400)
 
 
         headers = {"Authorization": f"Bearer {ivalid_fake_token}"}
