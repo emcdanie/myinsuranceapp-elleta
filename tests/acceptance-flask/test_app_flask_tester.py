@@ -38,8 +38,8 @@ class TestApp(unittest.TestCase):
         response = tester.get('/api/v1/users/1/products', content_type='application/json', headers=headers)
         data= response.json 
         print(f"get_user_products: {data}")
-        self.assertTrue(response.status_code > 400)
- 
+        self.assertEqual(response.status_code > 400)
+
 
      
        
